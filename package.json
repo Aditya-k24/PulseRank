@@ -1,0 +1,17 @@
+{
+  "name": "pulserank",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --parallel --filter './apps/*' dev",
+    "build": "pnpm --filter '@pulserank/shared' build && pnpm --parallel --filter './apps/*' build",
+    "lint": "pnpm --recursive lint",
+    "test": "pnpm --recursive test",
+    "prisma:generate": "pnpm --filter '@pulserank/api' prisma:generate",
+    "prisma:migrate": "pnpm --filter '@pulserank/api' prisma:migrate",
+    "prisma:seed": "pnpm --filter '@pulserank/api' prisma:seed"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,52 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String          @id @default(cuid())
+  username  String          @unique
+  email     String          @unique
+  password  String
+  score     UserScore?
+  events    ActivityEvent[]
+  createdAt DateTime        @default(now())
+}
+
+model IdempotencyKey {
+  key       String   @id
+  createdAt DateTime @default(now())
+}
+
+model ActivityEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String
+  points    Int
+  metadata  Json     @default("{}")
+  createdAt DateTime @default(now())
+}
+
+model UserScore {
+  userId    String   @id
+  user      User     @relation(fields: [userId], references: [id])
+  score     Int      @default(0)
+  updatedAt DateTime @updatedAt
+}
+
+model OutboxEvent {
+  id            String    @id @default(cuid())
+  aggregateType String
+  aggregateId   String
+  eventType     String
+  payload       Json
+  processedAt   DateTime?
+  createdAt     DateTime  @default(now())
+
+  @@index([processedAt])
+}
